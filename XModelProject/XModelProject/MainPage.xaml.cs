@@ -32,8 +32,8 @@ namespace XModelProject
         public dynamic GetData()
         {
             var Dic = App.Model.CreateDictionary();
-            Dic.Add("ColumnA", "hello");
-            Dic.Add("ColumnB", "I am");
+            Dic.Add("ColumnA", "Hi");
+            Dic.Add("ColumnB", "Is");
             Dic.Add("ColumnC", "Rugal");
             return Dic;
         }
