@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XModelProject.MainPage">
+
+    <StackLayout x:Name="TestStack">
+        
+        <Label x:Name="ColumnA"
+               TextColor="Red"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand"
+               Text="AAA"/>
+
+        <Button x:Name="ColumnB"
+                BackgroundColor="Red"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand"
+                TextColor="White"/>
+
+        <Entry x:Name="ColumnC"
+                BackgroundColor="Red"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand"
+                TextColor="White"/>
+
+    </StackLayout>
+
+</ContentPage>
