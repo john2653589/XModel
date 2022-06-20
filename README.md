@@ -1,1 +1,1 @@
-# XModelProject
+# XModel
