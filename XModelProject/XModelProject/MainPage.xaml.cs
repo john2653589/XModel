@@ -20,7 +20,7 @@ namespace XModelProject
                 .AddX_Text(ColumnB)
                 .AddX_Text(ColumnC)
                 .AsService<CoprsService>()
-                    .AddStorage(()=> GetData())
+                    .AddStorage(Item=> Item.Search())
                 .CallStorage(async Item =>
                 {
                     await Item.CallStorage();
