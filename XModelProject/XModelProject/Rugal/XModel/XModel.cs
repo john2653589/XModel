@@ -133,6 +133,12 @@ namespace Rugal.Xamarin.XModel
             BaseAddX_Bind(Obj, XModelProperty.Text, BindKey, StorageKey);
             return GetBaseModel();
         }
+
+        public XModel AddX_ItemsSource(Element Obj, string BindKey = null, string StorageKey = DefaultStorageKey)
+        {
+            BaseAddX_Bind(Obj, ItemsView.ItemsSourceProperty, BindKey, StorageKey);
+            return GetBaseModel();
+        }
         #endregion
 
         #region Update Model Data

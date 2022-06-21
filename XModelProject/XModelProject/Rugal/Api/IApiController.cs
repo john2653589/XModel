@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 namespace Rugal.Api.Controller
 {
     public interface IApiController<TGetAction, TPostAction, TDefaultResult>
-        where TGetAction : Enum 
+        where TGetAction : Enum
         where TPostAction : Enum
     {
         public string Domain { get; set; }
         public string Controller { get; set; }
         public IApiClient<TDefaultResult> Client { get; set; }
         public string GetUrl(Enum ActionName);
+        public Task<string> PostFileAsync(TPostAction ActionName, object UrlParam, string FileName);
+        public Task<TResult> PostFileAsync<TResult>(TPostAction ActionName, object UrlParam, string FileName);
         public Task<TResult> GetApi<TResult>(TGetAction ActionName, object UrlParam = null);
         public Task<TDefaultResult> GetApi(TGetAction ActionName, object UrlParam = null);
         public Task<TResult> PostApi<TResult>(TPostAction ActionName, object PostModel = null);

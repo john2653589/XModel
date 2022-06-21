@@ -23,26 +23,38 @@ namespace Rugal.Api.Controller
         public BaseApiController() { }
 
         #region Get Post Base Method
-        public Task<TResult> GetApi<TResult>(TGetAction ActionName, object UrlParam = null)
+        public virtual async Task<string> PostFileAsync(TPostAction ActionName, object UrlParam, string FileName)
         {
             var FullUrl = GetUrl(ActionName);
-            return Client.GetJsonAsync<TResult>(FullUrl, UrlParam);
+            return await Client.PostFileAsync(FullUrl, UrlParam, FileName);
         }
-        public Task<TDefaultResult> GetApi(TGetAction ActionName, object UrlParam = null)
+        public virtual async Task<TResult> PostFileAsync<TResult>(TPostAction ActionName, object UrlParam, string FileName)
         {
             var FullUrl = GetUrl(ActionName);
-            return Client.GetJsonAsync(FullUrl, UrlParam);
+            var Ret = await Client.PostFileAsync<TResult>(FullUrl, UrlParam, FileName);
+            return Ret;
         }
 
-        public Task<TResult> PostApi<TResult>(TPostAction ActionName, object PostModel = null)
+        public async Task<TResult> GetApi<TResult>(TGetAction ActionName, object UrlParam = null)
         {
             var FullUrl = GetUrl(ActionName);
-            return Client.PostJsonAsync<TResult>(FullUrl, PostModel);
+            return await Client.GetJsonAsync<TResult>(FullUrl, UrlParam);
         }
-        public Task<TDefaultResult> PostApi(TPostAction ActionName, object PostModel = null)
+        public async Task<TDefaultResult> GetApi(TGetAction ActionName, object UrlParam = null)
         {
             var FullUrl = GetUrl(ActionName);
-            return Client.PostJsonAsync(FullUrl, PostModel);
+            return await Client.GetJsonAsync(FullUrl, UrlParam);
+        }
+
+        public async Task<TResult> PostApi<TResult>(TPostAction ActionName, object PostModel = null)
+        {
+            var FullUrl = GetUrl(ActionName);
+            return await Client.PostJsonAsync<TResult>(FullUrl, PostModel);
+        }
+        public async Task<TDefaultResult> PostApi(TPostAction ActionName, object PostModel = null)
+        {
+            var FullUrl = GetUrl(ActionName);
+            return await Client.PostJsonAsync(FullUrl, PostModel);
         }
         #endregion
 
