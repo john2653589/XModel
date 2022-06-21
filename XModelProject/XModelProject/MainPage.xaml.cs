@@ -18,7 +18,11 @@ namespace XModelProject
             txt_ColumnA.AddX_Text("XResult.[UserInfo].[Name2].[Name3]");
             //ColumnA.SetBinding(Label.TextProperty, "XResult.[UserInfo].[Name2].[Name3]");
 
-
+            foreach (var Item in TestStack.Children)
+            {
+                var XName = Item.StyleId;
+                var a = 1;
+            }
 
             Model = App.Model
                 //.AddX_Text(ColumnA, "Name2.Name3", "UserInfo")
