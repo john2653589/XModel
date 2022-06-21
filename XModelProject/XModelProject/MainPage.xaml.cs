@@ -49,9 +49,9 @@ namespace XModelProject
                     var GetHa = GetData["Name2.Name3"];
                     var S = 1;
                 })
-                //.AddStorage(() => SetData())
-                .AsService<CoprsService>()
-                    .AddStorage(Item => Item.Search())
+                .AddStorage(() => SetData())
+                //.AsService<CoprsService>()
+                //    .AddStorage(Item => Item.Search())
                 .CallStorage(async Item =>
                 {
                     await Item.CallStorage();
@@ -61,11 +61,24 @@ namespace XModelProject
 
         public dynamic SetData()
         {
-            var Dic = App.Model.CreateXModelData();
-            Dic.Add("ColumnA", "Hi");
-            Dic.Add("ColumnB", "Is");
-            Dic.Add("ColumnC", "Rugal");
-            return Dic;
+            var Ret = new
+            {
+                TestA = new
+                {
+                    TestB = new
+                    {
+                        TestC = new
+                        {
+                            TestD = "AAA",
+                        }
+                    }
+                }
+            };
+            //var Ret = App.Model.CreateXModelData();
+            //Dic.Add("ColumnA", "Hi");
+            //Dic.Add("ColumnB", "Is");
+            //Dic.Add("ColumnC", "Rugal");
+            return Ret;
         }
     }
 }

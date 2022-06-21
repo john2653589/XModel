@@ -150,7 +150,7 @@ namespace Rugal.Xamarin.XModel
             if (GetModel is XModelData GetDictionary)
                 GetDictionary.ParentModel = BaseModel;
 
-            XResult[StorageKey] = GetModel;
+            XResult[StorageKey] = RCS_ConvertXModel(GetModel);
             OnChange("XResult");
             return BaseModel;
         }

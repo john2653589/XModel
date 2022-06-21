@@ -19,8 +19,6 @@ namespace Rugal.Xamarin.XModel
         {
             ParentModel?.OnChange("XResult");
         }
-
-
         private object RCS_GetValue(string FullPath, IDictionary<string, object> FindResult)
         {
             var SplitArray = FullPath.Split('.');
@@ -66,7 +64,6 @@ namespace Rugal.Xamarin.XModel
                 OnChange(GetPath);
             }
         }
-
         internal object RCS_ConvertXModel(object ConvertObject)
         {
             if (IsBasicValue(ConvertObject))
