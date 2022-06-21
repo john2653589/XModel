@@ -11,7 +11,7 @@ using Rugal.Xamarin.XModel.ServiceModel;
 using System.Linq;
 
 /*
- *  XModel v1.0.1
+ *  XModel v1.0.2
  *  From Rugal Tu
  *  MIT License
  */
