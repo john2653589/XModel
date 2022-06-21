@@ -21,7 +21,6 @@ namespace XModelProject
             foreach (var Item in TestStack.Children)
             {
                 var XName = Item.StyleId;
-                var a = 1;
             }
 
             Model = App.Model
@@ -57,6 +56,7 @@ namespace XModelProject
                     await Item.CallStorage();
                 })
                 .InitBind(this);
+            var s = 1;
         }
 
         public dynamic SetData()
