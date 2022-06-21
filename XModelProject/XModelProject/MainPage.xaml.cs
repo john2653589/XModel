@@ -15,18 +15,16 @@ namespace XModelProject
         {
             InitializeComponent();
 
-
-
             Model = App.Model
                 .AddX_Text(ColumnA)
-                .AddX_Text(ColumnB)
-                .AddX_Text(ColumnC)
+                //.AddX_Text(ColumnB)
+                //.AddX_Text(ColumnC)
+                .AddX_TextMult(null, ColumnB, ColumnC)
                 .AddX_Click(ColumnB, () =>
                 {
                     var C = 1;
                     var GetResult = App.Model.GetStorage<XModelData>();
                     GetResult["ColumnA"] = "Test";
-
                     //App.Model.SetStorage(new
                     //{
                     //    ColumnA = "欸欸欸欸",

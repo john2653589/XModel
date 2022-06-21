@@ -172,7 +172,18 @@ namespace Rugal.Xamarin.XModel
             BaseAddX_Bind(Obj, XModelProperty.Text, BindKey, StorageKey);
             return GetBaseModel();
         }
+        public XModel AddX_TextMult(string StorageKey = null, params Element[] Objs)
+        {
+            StorageKey ??= DefaultStorageKey;
+            var BaseModel = GetBaseModel();
+            if (Objs.Length == 0)
+                return BaseModel;
 
+            foreach (var Item in Objs)
+                BaseAddX_Bind(Item, XModelProperty.Text, null, StorageKey);
+
+            return BaseModel;
+        }
         public XModel AddX_ItemsSource(Element Obj, string BindKey = null, string StorageKey = DefaultStorageKey)
         {
             BaseAddX_Bind(Obj, ItemsView.ItemsSourceProperty, BindKey, StorageKey);
