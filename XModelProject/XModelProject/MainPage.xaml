@@ -5,7 +5,7 @@
 
     <StackLayout x:Name="TestStack">
         
-        <Label x:Name="ColumnA"
+        <Label x:Name="txt_ColumnA"
                TextColor="Red"
                VerticalOptions="CenterAndExpand"
                HorizontalOptions="CenterAndExpand"

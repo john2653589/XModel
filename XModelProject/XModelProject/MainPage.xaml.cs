@@ -15,8 +15,10 @@ namespace XModelProject
         {
             InitializeComponent();
 
-            ColumnA.AddX_Text("XResult.[UserInfo].[Name2].[Name3]");
+            txt_ColumnA.AddX_Text("XResult.[UserInfo].[Name2].[Name3]");
             //ColumnA.SetBinding(Label.TextProperty, "XResult.[UserInfo].[Name2].[Name3]");
+
+
 
             Model = App.Model
                 //.AddX_Text(ColumnA, "Name2.Name3", "UserInfo")
