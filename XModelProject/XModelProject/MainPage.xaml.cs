@@ -16,11 +16,11 @@ namespace XModelProject
             InitializeComponent();
 
             Model = App.Model
-                .AddX_Text(ColumnA, ".", "UserInfo")
+                .AddX_Text(ColumnA, "Name2.Name3", "UserInfo")
                 .AddX_TextMult("UserInfo", "Name", ColumnB, ColumnC)
                 .AddX_Click(BtnSet, () =>
                 {
-                    App.Model.SetStorage("涂光", null, "UserInfo");
+                    App.Model.SetStorage("涂光", "Name", "UserInfo");
                     //var SetData = new
                     //{
                     //    Name = "劉辰弘",
@@ -34,7 +34,11 @@ namespace XModelProject
                 .AddX_Click(BtnGet, () =>
                 {
                     var GetData = App.Model.GetStoragePath<XModelData>("UserInfo");
-                    App.Model.SetStorage("涂", "Name2.Name3", "UserInfo");
+                    GetData["Name2.Name3"] = "哈哈哈";
+                    //App.Model.SetStorage("涂", "Name2.Name3", "UserInfo");
+
+                    var GetHa = GetData["Name2.Name3"];
+                    var S = 1;
                 })
                 //.AddStorage(() => SetData())
                 .AsService<CoprsService>()

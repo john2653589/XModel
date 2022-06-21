@@ -139,7 +139,6 @@ namespace Rugal.Xamarin.XModel
                 FullStoragePath = $"{FullStoragePath}.{SetPath.TrimStart('.')}";
             RCS_SetSotrage(SetObject, FullStoragePath, XResult);
         }
-
         #endregion
 
         #region Call Storage
@@ -223,33 +222,22 @@ namespace Rugal.Xamarin.XModel
         }
         #endregion
 
-        #region Update Model Data
-        public XModel UpdateXResult(object UpdateModel, string StorageKey = DefaultStorageKey)
-        {
-            XResult[StorageKey] = UpdateModel;
-            OnChange("XResult");
-            return GetBaseModel();
-        }
-
-
-        #endregion
-
         #region Base Method
         private XModel BaseAddX_Bind(Element Obj, BindableProperty BindProperty, string BindKey, string StorageKey)
         {
             BindKey ??= Obj.StyleId;
-            var FullBindKey = ConvertBindKey(BindKey, StorageKey);
+            var FullBindKey = ConvertBindPath(BindKey, StorageKey);
             Obj.AddX_Bind(BindProperty, FullBindKey);
             return GetBaseModel();
         }
         private XModel BaseAddX_Bind(Element Obj, string BindProperty, string BindKey = null, string StorageKey = DefaultStorageKey)
         {
             BindKey ??= Obj.StyleId;
-            var FullBindKey = ConvertBindKey(BindKey, StorageKey);
+            var FullBindKey = ConvertBindPath(BindKey, StorageKey);
             Obj.AddX_Bind(BindProperty, FullBindKey);
             return GetBaseModel();
         }
-        private string ConvertBindKey(string BindKey, string StorageKey = DefaultStorageKey)
+        private string ConvertBindPath(string BindKey, string StorageKey = DefaultStorageKey)
         {
             var JoinBindKey = new List<string>
             {

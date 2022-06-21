@@ -4,24 +4,24 @@ using System.Linq;
 
 namespace Rugal.Xamarin.BindingModel
 {
-    public class BaseObservableDictionary<TKey, TVal> : BaseOnChangeEvent, IDictionary<TKey, TVal>
+    public class BaseObservableDictionary<TVal> : BaseOnChangeEvent, IDictionary<string, TVal>
     {
-        internal Dictionary<TKey, TVal> Model;
+        internal Dictionary<string, TVal> Model;
         public BaseObservableDictionary()
         {
-            Model = new Dictionary<TKey, TVal> { };
+            Model = new Dictionary<string, TVal> { };
         }
         public ICollection<TVal> Values => Model.Values;
-        public ICollection<TKey> Keys => Model.Keys;
+        public ICollection<string> Keys => Model.Keys;
         public int Count => Model.Count;
         public bool IsReadOnly => false;
         public void Clear() => Model.Clear();
-        public IEnumerator<KeyValuePair<TKey, TVal>> GetEnumerator() => Model.GetEnumerator();
+        public IEnumerator<KeyValuePair<string, TVal>> GetEnumerator() => Model.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => Model.GetEnumerator();
-        public bool ContainsKey(TKey Key) => Model.ContainsKey(Key);
-        public bool Remove(TKey Key) => Model.Remove(Key);
-        public bool TryGetValue(TKey Key, out TVal Value) => Model.TryGetValue(Key, out Value);
-        public TVal this[TKey Key]
+        public bool ContainsKey(string Key) => Model.ContainsKey(Key);
+        public bool Remove(string Key) => Model.Remove(Key);
+        public bool TryGetValue(string Key, out TVal Value) => Model.TryGetValue(Key, out Value);
+        public virtual TVal this[string Key]
         {
             get
             {
@@ -38,21 +38,21 @@ namespace Rugal.Xamarin.BindingModel
                 OnChange(Key.ToString());
             }
         }
-        public void Add(TKey Key, TVal Value)
+        public void Add(string Key, TVal Value)
         {
             Model[Key] = Value;
             OnChange(Key.ToString());
         }
-        public void Add(KeyValuePair<TKey, TVal> Item) => Model.Add(Item.Key, Item.Value);
-        public bool Contains(KeyValuePair<TKey, TVal> Item)
+        public void Add(KeyValuePair<string, TVal> Item) => Model.Add(Item.Key, Item.Value);
+        public bool Contains(KeyValuePair<string, TVal> Item)
         {
             return Model.ContainsKey(Item.Key) && Model[Item.Key].Equals(Item.Value);
         }
-        public void CopyTo(KeyValuePair<TKey, TVal>[] Array, int ArrayIndex)
+        public void CopyTo(KeyValuePair<string, TVal>[] Array, int ArrayIndex)
         {
             return;
         }
-        public bool Remove(KeyValuePair<TKey, TVal> item)
+        public bool Remove(KeyValuePair<string, TVal> item)
         {
             return false;
         }
