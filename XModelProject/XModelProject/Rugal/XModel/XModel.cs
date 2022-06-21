@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Rugal.Xamarin.XModel.ServiceModel;
+using System.Linq;
 
 /*
  *  XModel v1.0.1
@@ -30,10 +31,11 @@ namespace Rugal.Xamarin.XModel
         internal XModel()
         {
             StorageKeys = new Dictionary<string, ApiFuncModel> { };
-            XResult = CreateDictionary();
+            XResult = CreateXModelData();
         }
+
         #region Create Bindin Dataa
-        public XModelData CreateDictionary()
+        public XModelData CreateXModelData()
         {
             return new XModelData() { ParentModel = this };
         }
@@ -172,7 +174,7 @@ namespace Rugal.Xamarin.XModel
             BaseAddX_Bind(Obj, XModelProperty.Text, BindKey, StorageKey);
             return GetBaseModel();
         }
-        public XModel AddX_TextMult(string StorageKey = null, params Element[] Objs)
+        public XModel AddX_TextMult(string StorageKey = null, string BindKey = null, params Element[] Objs)
         {
             StorageKey ??= DefaultStorageKey;
             var BaseModel = GetBaseModel();
@@ -180,7 +182,7 @@ namespace Rugal.Xamarin.XModel
                 return BaseModel;
 
             foreach (var Item in Objs)
-                BaseAddX_Bind(Item, XModelProperty.Text, null, StorageKey);
+                BaseAddX_Bind(Item, XModelProperty.Text, BindKey, StorageKey);
 
             return BaseModel;
         }
@@ -256,7 +258,10 @@ namespace Rugal.Xamarin.XModel
             };
 
             if (BindKey != ".")
-                JoinBindKey.Add(BindKey.Contains(".") ? BindKey : $"[{BindKey}]");
+            {
+                var ColumnKeys = BindKey.Split('.').Select(Item => $"[{Item}]");
+                JoinBindKey.AddRange(ColumnKeys);
+            }
 
             var FullBindKey = string.Join(".", JoinBindKey);
             return FullBindKey;
@@ -276,11 +281,16 @@ namespace Rugal.Xamarin.XModel
         {
             var GetPath = FullStoragePath.Split('.')[0];
             if (!SetResult.ContainsKey(GetPath))
-                SetResult.Add(GetPath, CreateDictionary());
+                SetResult.Add(GetPath, CreateXModelData());
 
             if (FullStoragePath.Contains("."))
             {
                 var GetResult = SetResult[GetPath] as IDictionary<string, object>;
+                if (GetResult is null)
+                {
+                    SetResult[GetPath] = CreateXModelData();
+                    GetResult = SetResult[GetPath] as IDictionary<string, object>;
+                }
                 var NextPath = FullStoragePath.Replace($"{GetPath}.", "");
                 RCS_SetSotrage(SetObject, NextPath, GetResult);
             }
@@ -299,7 +309,7 @@ namespace Rugal.Xamarin.XModel
             if (IsBasicValue(ConvertObject))
                 return ConvertObject;
 
-            var Ret = CreateDictionary();
+            var Ret = CreateXModelData();
             if (ConvertObject is IDictionary<string, object> ConvertDic)
             {
                 foreach (var Item in ConvertDic)

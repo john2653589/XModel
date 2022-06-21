@@ -16,21 +16,25 @@ namespace XModelProject
             InitializeComponent();
 
             Model = App.Model
-                .AddX_Text(ColumnA)
-                //.AddX_Text(ColumnB)
-                //.AddX_Text(ColumnC)
-                .AddX_TextMult(null, ColumnB, ColumnC)
-                .AddX_Click(ColumnB, () =>
+                .AddX_Text(ColumnA, ".", "UserInfo")
+                .AddX_TextMult("UserInfo", "Name", ColumnB, ColumnC)
+                .AddX_Click(BtnSet, () =>
                 {
-                    var C = 1;
-                    var GetResult = App.Model.GetStorage<XModelData>();
-                    GetResult["ColumnA"] = "Test";
-                    //App.Model.SetStorage(new
+                    App.Model.SetStorage("涂光", null, "UserInfo");
+                    //var SetData = new
                     //{
-                    //    ColumnA = "欸欸欸欸",
-                    //});
-                    var A = App.Model.GetStorage();
-                    var B = 1;
+                    //    Name = "劉辰弘",
+                    //    Name2 = new
+                    //    {
+                    //        Name3 = "黃楷"
+                    //    },
+                    //};
+                    //App.Model.SetStorage(SetData, null, "UserInfo");
+                })
+                .AddX_Click(BtnGet, () =>
+                {
+                    var GetData = App.Model.GetStoragePath<XModelData>("UserInfo");
+                    App.Model.SetStorage("涂", "Name2.Name3", "UserInfo");
                 })
                 //.AddStorage(() => SetData())
                 .AsService<CoprsService>()
@@ -44,7 +48,7 @@ namespace XModelProject
 
         public dynamic SetData()
         {
-            var Dic = App.Model.CreateDictionary();
+            var Dic = App.Model.CreateXModelData();
             Dic.Add("ColumnA", "Hi");
             Dic.Add("ColumnB", "Is");
             Dic.Add("ColumnC", "Rugal");

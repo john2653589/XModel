@@ -23,6 +23,14 @@
                 VerticalOptions="CenterAndExpand"
                 TextColor="White"/>
 
+        <Button Text="Set"
+                BackgroundColor="Blue"
+                x:Name="BtnSet"/>
+        
+        <Button Text="Get"
+                BackgroundColor="Green"
+                x:Name="BtnGet"/>
+
     </StackLayout>
 
 </ContentPage>

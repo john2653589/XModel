@@ -18,7 +18,7 @@ namespace XModelProject.Service
 
         public dynamic Search()
         {
-            var Dic = App.Model.CreateDictionary();
+            var Dic = App.Model.CreateXModelData();
             Dic.Add("ColumnA", "hello");
             Dic.Add("ColumnB", "I am");
             Dic.Add("ColumnC", "Rugal");
