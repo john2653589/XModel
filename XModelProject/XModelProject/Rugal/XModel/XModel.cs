@@ -34,7 +34,7 @@ namespace Rugal.Xamarin.XModel
             XResult = CreateXModelData();
         }
 
-        #region Create Bindin Dataa
+        #region Create Binding Data
         public XModelData CreateXModelData()
         {
             return new XModelData() { ParentModel = this };
