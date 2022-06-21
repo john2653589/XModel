@@ -10,7 +10,7 @@ using Xamarin.Forms;
 using Rugal.Xamarin.XModel.ServiceModel;
 
 /*
- *  XModel v1.0.0
+ *  XModel v1.0.1
  *  From Rugal Tu
  *  MIT License
  */
@@ -101,7 +101,46 @@ namespace Rugal.Xamarin.XModel
         }
         #endregion
 
-        #region Call Api
+        #region Get or Set Storage
+        public object GetStoragePath(string StoragePath)
+        {
+            var GetResult = RCS_GetStorage(StoragePath, XResult);
+            return GetResult;
+        }
+        public TResult GetStoragePath<TResult>(string StoragePath) where TResult : class
+        {
+            var GetResult = RCS_GetStorage(StoragePath, XResult);
+            return GetResult as TResult;
+        }
+        public object GetStorage(string GetPath = null, string StorageKey = DefaultStorageKey)
+        {
+            var FullStoragePath = StorageKey;
+            if (GetPath != null)
+                FullStoragePath = $"{FullStoragePath}.{GetPath.TrimStart('.')}";
+            var GetResult = RCS_GetStorage(FullStoragePath, XResult);
+            return GetResult;
+        }
+        public TResult GetStorage<TResult>(string GetPath = null, string StorageKey = DefaultStorageKey) where TResult : class
+        {
+            var GetResult = GetStorage(GetPath, StorageKey);
+            return GetResult as TResult;
+        }
+
+        public void SetStoragePath(object SetObject, string FullStoragePath)
+        {
+            RCS_SetSotrage(SetObject, FullStoragePath, XResult);
+        }
+        public void SetStorage(object SetObject, string SetPath = null, string StorageKey = DefaultStorageKey)
+        {
+            var FullStoragePath = StorageKey;
+            if (SetPath != null)
+                FullStoragePath = $"{FullStoragePath}.{SetPath.TrimStart('.')}";
+            RCS_SetSotrage(SetObject, FullStoragePath, XResult);
+        }
+
+        #endregion
+
+        #region Call Storage
         public async Task<XModel> CallStorage(string StorageKey = DefaultStorageKey)
         {
             var BaseModel = GetBaseModel();
@@ -139,6 +178,36 @@ namespace Rugal.Xamarin.XModel
             BaseAddX_Bind(Obj, ItemsView.ItemsSourceProperty, BindKey, StorageKey);
             return GetBaseModel();
         }
+        public XModel AddX_Click(Element Obj, EventHandler ClickEvent)
+        {
+            if (Obj is Button Btn)
+                Btn.Clicked += ClickEvent;
+            else if (Obj is ImageButton ImageBtn)
+                ImageBtn.Clicked += ClickEvent;
+            else if (Obj is IGestureRecognizers Operate)
+            {
+                var Tap = new TapGestureRecognizer();
+                Tap.Tapped += ClickEvent;
+                Operate.GestureRecognizers.Add(Tap);
+            }
+
+            return this;
+        }
+        public XModel AddX_Click(Element Obj, Action ClickEvent)
+        {
+            if (Obj is Button Btn)
+                Btn.Clicked += (s, e) => ClickEvent.Invoke();
+            else if (Obj is ImageButton ImageBtn)
+                ImageBtn.Clicked += (s, e) => ClickEvent.Invoke();
+            else if (Obj is IGestureRecognizers Operate)
+            {
+                var Tap = new TapGestureRecognizer();
+                Tap.Tapped += (s, e) => ClickEvent.Invoke();
+                Operate.GestureRecognizers.Add(Tap);
+            }
+
+            return this;
+        }
         #endregion
 
         #region Update Model Data
@@ -169,15 +238,83 @@ namespace Rugal.Xamarin.XModel
         }
         private string ConvertBindKey(string BindKey, string StorageKey = DefaultStorageKey)
         {
-            BindKey = BindKey.Contains(".") ? BindKey.Trim('.') : $"[{BindKey}]";
-            var JoinBindKey = new[] {
+            var JoinBindKey = new List<string>
+            {
                 "XResult",
                 $"[{StorageKey}]",
-                BindKey
             };
+
+            if (BindKey != ".")
+                JoinBindKey.Add(BindKey.Contains(".") ? BindKey : $"[{BindKey}]");
 
             var FullBindKey = string.Join(".", JoinBindKey);
             return FullBindKey;
+        }
+        private object RCS_GetStorage(string FullStoragePath, IDictionary<string, object> FindResult)
+        {
+            var GetPath = FullStoragePath.Split('.')[0];
+            var GetResult = FindResult[GetPath];
+            if (FullStoragePath.Contains("."))
+            {
+                var NextPath = FullStoragePath.Replace($"{GetPath}.", "");
+                return RCS_GetStorage(NextPath, GetResult as IDictionary<string, object>);
+            }
+            return GetResult;
+        }
+        private void RCS_SetSotrage(object SetObject, string FullStoragePath, IDictionary<string, object> SetResult)
+        {
+            var GetPath = FullStoragePath.Split('.')[0];
+            if (!SetResult.ContainsKey(GetPath))
+                SetResult.Add(GetPath, CreateDictionary());
+
+            if (FullStoragePath.Contains("."))
+            {
+                var GetResult = SetResult[GetPath] as IDictionary<string, object>;
+                var NextPath = FullStoragePath.Replace($"{GetPath}.", "");
+                RCS_SetSotrage(SetObject, NextPath, GetResult);
+            }
+            else
+            {
+                SetResult[GetPath] = IsBasicValue(SetObject) ? SetObject : RCS_ConvertXModel(SetObject);
+            }
+        }
+        internal XModelData ConvertXModel(object ConvertObject)
+        {
+            var Ret = RCS_ConvertXModel(ConvertObject) as XModelData;
+            return Ret;
+        }
+        private object RCS_ConvertXModel(object ConvertObject)
+        {
+            if (IsBasicValue(ConvertObject))
+                return ConvertObject;
+
+            var Ret = CreateDictionary();
+            if (ConvertObject is IDictionary<string, object> ConvertDic)
+            {
+                foreach (var Item in ConvertDic)
+                    Ret.Add(Item.Key, RCS_ConvertXModel(Item.Value));
+            }
+            else
+            {
+                var GetProperties = ConvertObject.GetType().GetProperties();
+                foreach (var Item in GetProperties)
+                    Ret.Add(Item.Name, RCS_ConvertXModel(Item.GetValue(ConvertObject)));
+            }
+            return Ret;
+        }
+        internal virtual bool IsBasicValue(object ConvertObject)
+        {
+            var Ret = ConvertObject is int ||
+                ConvertObject is string ||
+                ConvertObject is bool ||
+                ConvertObject is DateTime ||
+                ConvertObject is System.Collections.IEnumerable ||
+                ConvertObject is double ||
+                ConvertObject is float ||
+                ConvertObject is char ||
+                ConvertObject is long;
+
+            return Ret;
         }
         internal XModel GetBaseModel() => ParentXModel ?? this;
         #endregion

@@ -20,7 +20,7 @@ namespace Rugal.Xamarin.XModel.ServiceModel
         }
         public XModelService() { }
 
-        #region Add Api
+        #region Add Storage
         public XModelService<TService> AddStorage<TResult>(string StorageKey, Func<TService, Task<TResult>> ApiFunc)
         {
             var FuncModel = new ApiFuncModel(true, async () =>
@@ -59,5 +59,6 @@ namespace Rugal.Xamarin.XModel.ServiceModel
             return Service;
         }
         #endregion
+
     }
 }

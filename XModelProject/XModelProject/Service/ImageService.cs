@@ -16,13 +16,13 @@ namespace XModelProject.Service
             Api = _Api;
         }
 
-        public Task<dynamic> Search()
+        public dynamic Search()
         {
             var Dic = App.Model.CreateDictionary();
             Dic.Add("ColumnA", "hello");
             Dic.Add("ColumnB", "I am");
             Dic.Add("ColumnC", "Rugal");
-            return Task.FromResult((dynamic)Dic);
+            return Dic;
         }
     }
 }

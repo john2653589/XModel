@@ -15,11 +15,26 @@ namespace XModelProject
         {
             InitializeComponent();
 
+
+
             Model = App.Model
                 .AddX_Text(ColumnA)
                 .AddX_Text(ColumnB)
                 .AddX_Text(ColumnC)
-                //.AddStorage(() => GetData())
+                .AddX_Click(ColumnB, () =>
+                {
+                    var C = 1;
+                    var GetResult = App.Model.GetStorage<XModelData>();
+                    GetResult["ColumnA"] = "Test";
+
+                    //App.Model.SetStorage(new
+                    //{
+                    //    ColumnA = "欸欸欸欸",
+                    //});
+                    var A = App.Model.GetStorage();
+                    var B = 1;
+                })
+                //.AddStorage(() => SetData())
                 .AsService<CoprsService>()
                     .AddStorage(Item => Item.Search())
                 .CallStorage(async Item =>
@@ -29,7 +44,7 @@ namespace XModelProject
                 .InitBind(this);
         }
 
-        public dynamic GetData()
+        public dynamic SetData()
         {
             var Dic = App.Model.CreateDictionary();
             Dic.Add("ColumnA", "Hi");
