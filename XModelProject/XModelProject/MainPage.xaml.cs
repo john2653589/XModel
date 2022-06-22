@@ -56,7 +56,7 @@ namespace XModelProject
                     await Item.CallStorage();
                 })
                 .InitBind(this);
-            var s = 1;
+
         }
 
         public dynamic SetData()

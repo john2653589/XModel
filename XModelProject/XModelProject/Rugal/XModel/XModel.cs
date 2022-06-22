@@ -57,7 +57,6 @@ namespace Rugal.Xamarin.XModel
             var ModelService = XModelService<TService>.CreateModelService(this);
             return ModelService;
         }
-
         public XModel AsClone()
         {
             var CloneModel = new XModel(ServiceManager);
@@ -68,9 +67,9 @@ namespace Rugal.Xamarin.XModel
                 CloneModel.XResult.Add(Item.Key, Item.Value);
             return CloneModel;
         }
-
-
         #endregion
+
+        #region Storage Controller
 
         #region Add Storage
         public XModel AddStorage(string StorageKey, Func<object> ApiFunc)
@@ -103,7 +102,7 @@ namespace Rugal.Xamarin.XModel
         }
         #endregion
 
-        #region Get or Set Storage
+        #region Get Storage
         public object GetStoragePath(string StoragePath)
         {
             var GetResult = RCS_GetStorage(StoragePath, XResult);
@@ -127,7 +126,9 @@ namespace Rugal.Xamarin.XModel
             var GetResult = GetStorage(GetPath, StorageKey);
             return GetResult as TResult;
         }
+        #endregion
 
+        #region Set Sotrage
         public void SetStoragePath(object SetObject, string FullStoragePath)
         {
             RCS_SetSotrage(SetObject, FullStoragePath, XResult);
@@ -160,6 +161,35 @@ namespace Rugal.Xamarin.XModel
             CallAction(BaseModel);
             return BaseModel;
         }
+        #endregion
+
+        #region Use Storage
+        public XModel UseSotragePath(string StoragePath, Action<XModelData> UseFunc)
+        {
+            var GetResult = GetStoragePath<XModelData>(StoragePath);
+            UseFunc.Invoke(GetResult);
+            return GetBaseModel();
+        }
+        public XModel UseStoragePath<TResult>(string StoragePath, Action<TResult> UseFunc) where TResult : class
+        {
+            var GetResult = GetStoragePath<TResult>(StoragePath);
+            UseFunc.Invoke(GetResult);
+            return GetBaseModel();
+        }
+        public XModel UseStorage(string GetPath, Action<XModelData> UseFunc, string StorageKey = DefaultStorageKey)
+        {
+            var GetResult = GetStorage<XModelData>(GetPath, StorageKey);
+            UseFunc.Invoke(GetResult);
+            return GetBaseModel();
+        }
+        public XModel UseStorage<TResult>(string GetPath, Action<TResult> UseFunc, string StorageKey = DefaultStorageKey) where TResult : class
+        {
+            var GetResult = GetStorage<TResult>(GetPath, StorageKey);
+            UseFunc.Invoke(GetResult);
+            return GetBaseModel();
+        }
+        #endregion
+
         #endregion
 
         #region Add Bind Method
