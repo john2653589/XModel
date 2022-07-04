@@ -25,7 +25,7 @@ namespace Rugal.Xamarin.XModel
             var GetPath = SplitArray[0];
             if (!FindResult.ContainsKey(GetPath))
             {
-                FindResult.Add(GetPath, ParentModel.CreateXModelData());
+                FindResult.Add(GetPath, CreateNewData());
                 OnChange(GetPath);
             }
 
@@ -43,16 +43,13 @@ namespace Rugal.Xamarin.XModel
             var SplitArray = SetPath.Split('.');
             var GetPath = SplitArray[0];
 
-            if (!FindResult.ContainsKey(GetPath))
-            {
-                FindResult.Add(GetPath, ParentModel.CreateXModelData());
-                OnChange(GetPath);
-            }
-
             if (SetPath.Contains("."))
             {
+                if (!FindResult.ContainsKey(GetPath))
+                    FindResult.Add(GetPath, CreateNewData());
+
                 if (FindResult[GetPath] is not IDictionary<string, object>)
-                    FindResult[GetPath] = ParentModel.CreateXModelData();
+                    FindResult[GetPath] = CreateNewData();
 
                 var NextResult = FindResult[GetPath] as IDictionary<string, object>;
                 var NextPath = string.Join(".", SplitArray.Skip(1));
@@ -69,7 +66,13 @@ namespace Rugal.Xamarin.XModel
             if (IsBasicValue(ConvertObject))
                 return ConvertObject;
 
-            var Ret = ParentModel.CreateXModelData();
+            if (ConvertObject is XModelData)
+                return ConvertObject;
+
+            if (IsArray(ConvertObject, out var OutArray))
+                return OutArray;
+
+            var Ret = CreateNewData();
             if (ConvertObject is IDictionary<string, object> ConvertDic)
             {
                 foreach (var Item in ConvertDic)
@@ -85,17 +88,39 @@ namespace Rugal.Xamarin.XModel
         }
         internal virtual bool IsBasicValue(object ConvertObject)
         {
-            var Ret = ConvertObject is int ||
+            var Ret = ConvertObject is null ||
+                ConvertObject is int ||
                 ConvertObject is string ||
                 ConvertObject is bool ||
                 ConvertObject is DateTime ||
-                ConvertObject is System.Collections.IEnumerable ||
                 ConvertObject is double ||
                 ConvertObject is float ||
                 ConvertObject is char ||
                 ConvertObject is long;
 
             return Ret;
+        }
+        internal virtual bool IsArray(object ConvertObject, out IEnumerable<object> OutArray)
+        {
+            OutArray = null;
+            if (ConvertObject is System.Collections.IEnumerable ArrayObject)
+            {
+                var OutModel = new List<object>();
+                foreach (var item in ArrayObject)
+                    OutModel.Add(RCS_ConvertXModel(item));
+
+                OutArray = OutModel;
+                return true;
+            }
+            return false;
+        }
+
+        private XModelData CreateNewData()
+        {
+            if (ParentModel is not null)
+                return ParentModel.CreateXModelData();
+
+            return new XModelData();
         }
     }
 }

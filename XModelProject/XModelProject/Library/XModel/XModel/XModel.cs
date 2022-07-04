@@ -11,7 +11,7 @@ using Rugal.Xamarin.XModel.ServiceModel;
 using System.Linq;
 
 /*
- *  XModel v1.0.2
+ *  XModel v1.0.3
  *  From Rugal Tu
  *  MIT License
  */
@@ -150,6 +150,9 @@ namespace Rugal.Xamarin.XModel
             var GetModel = await GetFunc.ApiFunc.Invoke();
             if (GetModel is XModelData GetDictionary)
                 GetDictionary.ParentModel = BaseModel;
+            if (GetModel is List<XModelData> ListModel)
+                foreach (var Item in ListModel)
+                    Item.ParentModel = BaseModel;
 
             XResult[StorageKey] = RCS_ConvertXModel(GetModel);
             OnChange("XResult");
@@ -327,6 +330,9 @@ namespace Rugal.Xamarin.XModel
             if (IsBasicValue(ConvertObject))
                 return ConvertObject;
 
+            if (ConvertObject is XModelData)
+                return ConvertObject;
+
             var Ret = CreateXModelData();
             if (ConvertObject is IDictionary<string, object> ConvertDic)
             {
@@ -343,7 +349,8 @@ namespace Rugal.Xamarin.XModel
         }
         internal virtual bool IsBasicValue(object ConvertObject)
         {
-            var Ret = ConvertObject is int ||
+            var Ret = ConvertObject is null ||
+                ConvertObject is int ||
                 ConvertObject is string ||
                 ConvertObject is bool ||
                 ConvertObject is DateTime ||
@@ -355,6 +362,9 @@ namespace Rugal.Xamarin.XModel
 
             return Ret;
         }
+
+
+
         internal XModel GetBaseModel() => ParentXModel ?? this;
         #endregion
     }
