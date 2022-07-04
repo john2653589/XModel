@@ -14,9 +14,12 @@ namespace Rugal.Xamarin.BindingModel
         {
             Property = new Dictionary<string, object> { };
         }
-        public object PropertyGet([CallerMemberName] string PropertyName = null)
+        public dynamic PropertyGet([CallerMemberName] string PropertyName = null)
         {
             if (PropertyName == null)
+                return null;
+
+            if (!Property.ContainsKey(PropertyName))
                 return null;
 
             return Property[PropertyName];
